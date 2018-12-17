@@ -18,6 +18,18 @@ RUN \
   find lib -name '*.a' -delete && \
   rm -rf _CPack_Packages
 
+# Install dependencies we need:
+RUN \
+  # SlicerOpenIGTLink (should also grab and build https://github.com/openigtlink/OpenIGTLink)
+  cd /usr/src && \
+  git clone https://github.com/openigtlink/SlicerOpenIGTLink.git && \
+  cd SlicerOpenIGTLink && \
+  mkdir build && \
+  cmake .. -GNinja -DSlicer_DIR="/usr/src/Slicer-build/Slicer-build" && \
+  ninja && \
+  ninja install
+
+
 WORKDIR /usr/src/Slicer-build/Slicer-build
 
 CMD bash
