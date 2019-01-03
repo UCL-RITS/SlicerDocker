@@ -41,6 +41,16 @@ RUN \
   cmake .. -GNinja -DADDITIONAL_CXX_FLAGS="-O" -DSlicer_DIR="/usr/src/Slicer-build/Slicer-build" && \
   ninja
 
+RUN \
+  # SlicerIGT
+  cd /usr/src && \
+  git clone https://github.com/SlicerIGT/SlicerIGT.git && \
+  cd SlicerIGT && \
+  mkdir build && \
+  cd build && \
+  cmake .. -GNinja -DADDITIONAL_CXX_FLAGS="-O" -DSlicer_DIR="/usr/src/Slicer-build/Slicer-build" && \
+  ninja
+
 WORKDIR /usr/src/Slicer-build/Slicer-build
 
 CMD bash
