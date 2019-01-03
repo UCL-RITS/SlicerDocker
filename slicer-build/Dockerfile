@@ -1,5 +1,12 @@
 FROM slicer/slicer-base:410
 
+
+# Update packages and install new ones for opengl
+RUN \
+  # UPDATE
+  yum -y update && \
+  yum -y install xorg-x11-drv-intel mesa-dri-drivers mesa-libGL
+
 RUN \
   #
   # Re-configure
