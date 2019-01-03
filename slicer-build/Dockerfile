@@ -1,4 +1,4 @@
-FROM slicer/slicer-base:latest
+FROM slicer/slicer-base:410
 
 RUN \
   #
@@ -17,6 +17,22 @@ RUN \
   find . -name '*.o' -delete && \
   find lib -name '*.a' -delete && \
   rm -rf _CPack_Packages
+
+RUN \
+  cd /usr/src/Slicer-build/Slicer-build && \
+  ninja install
+
+# Install dependencies we need:
+RUN \
+  # SlicerOpenIGTLink (should also grab and build https://github.com/openigtlink/OpenIGTLink)
+  cd /usr/src && \
+  git clone https://github.com/openigtlink/SlicerOpenIGTLink.git && \
+  cd SlicerOpenIGTLink && \
+  git checkout 4.10 && \
+  mkdir build && \
+  cd build && \
+  cmake .. -GNinja -DADDITIONAL_CXX_FLAGS="-O" -DSlicer_DIR="/usr/src/Slicer-build/Slicer-build" && \
+  ninja
 
 WORKDIR /usr/src/Slicer-build/Slicer-build
 

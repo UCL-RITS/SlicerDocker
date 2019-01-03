@@ -1,7 +1,7 @@
 FROM slicer/buildenv-qt5-centos7:latest
 
 # Slicer master 2018-12-13
-ENV SLICER_VERSION 27630
+ENV SLICER_VERSION 27501
 
 RUN \
   #
@@ -21,7 +21,8 @@ RUN \
     -DQt5_DIR:PATH=${Qt5_DIR} \
     -DSlicer_BUILD_ITKPython:BOOL=OFF \
     -DSlicer_INSTALL_ITKPython:BOOL=OFF \
-      /usr/src/Slicer && \
+      /usr/src/Slicer
+RUN \
   #
   # Split the superbuild commands (what is executed by ninja) into building Slicer's
   # dependencies, and building Slicer itself.
@@ -52,22 +53,22 @@ RUN \
     echo "cmake --build /usr/src/Slicer-build/Slicer-build --target package -- \$BUILD_TOOL_FLAGS | tee /usr/src/Slicer-build/Slicer-build/PACKAGES.txt" >> BuildSlicer.sh && \
     echo "cat /usr/src/Slicer-build/Slicer-build/PACKAGES.txt | gawk 'match(\$0, /CPack: - package: (.*) generated/, a) {print a[1]}' > /usr/src/Slicer-build/Slicer-build/PACKAGE_FILE.txt" >> BuildSlicer.sh && \
     chmod +x BuildSlicer.sh && \
-    rm xx01 xx01-no-slicer-build && \
-  #
+    rm xx01 xx01-no-slicer-build
+RUN \
+   cd /usr/src/Slicer-build && \
   # Build dependencies
   #
-  ./BuildSlicerDependencies.sh && \
+  ./BuildSlicerDependencies.sh
+RUN \
   #
   # Cleanup
   #
+  cd /usr/src/Slicer-build && \ 
   # Remove all object files
   find . -name '*.o' -delete && \
   # Remove all git directories
   find . -name .git -type d -prune -exec rm -rf "{}" \; && \
   # Remove files
-  rm -f *.cmake *.txt *.applied *.updated *.in *.tcl Makefile && \
-  rm -f *.tgz *.tar.gz *.zip && \
-  rm -rf CMakeFiles && \
   # Remove all python-* directories except python-install
   find . -maxdepth 1 -type d  -name python-install -o -type d -name "python-*" -exec rm -rf "{}" \; && \
   rm -rf NUMPY && \
@@ -92,8 +93,7 @@ RUN \
   find DCMTK -name '*.cc' -delete && \
   find ITK -name '*.cxx' -delete -o -name '*.cpp' -delete && \
   find VTK -name '*.cxx' -delete -o -name '*.cpp' -delete && \
-  rm -rf CTK-build/PythonQt/generated* && \
-  rm -rf /usr/src/Slicer
+  rm -rf CTK-build/PythonQt/generated*
 
 WORKDIR /usr/src/Slicer-build
 
