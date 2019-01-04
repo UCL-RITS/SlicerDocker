@@ -53,6 +53,8 @@ RUN \
 
 WORKDIR /usr/src/Slicer-build/Slicer-build
 
+ADD local_home_config /root/.config
+
 CMD bash
 
 # Build-time metadata as defined at http://label-schema.org
