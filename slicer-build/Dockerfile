@@ -49,7 +49,8 @@ RUN \
   mkdir build && \
   cd build && \
   cmake .. -GNinja -DADDITIONAL_CXX_FLAGS="-O" -DSlicer_DIR="/usr/src/Slicer-build/Slicer-build" && \
-  ninja
+  ninja && \
+  ninja install
 
 WORKDIR /usr/src/Slicer-build/Slicer-build
 
